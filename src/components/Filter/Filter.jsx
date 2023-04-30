@@ -1,10 +1,16 @@
-import PropTypes from 'prop-types';
+import React from 'react';
 import { nanoid } from 'nanoid';
 import css from './Filter.module.css';
+import { setFilter } from '../../redux/filterSlicer';
+import { useDispatch } from 'react-redux';
 
-const Filter = ({ filtered }) => {
+const Filter = () => {
   const filterId = nanoid();
+  const dispatch = useDispatch();
 
+  const handleFilter = event => {
+    dispatch(setFilter(event.currentTarget.value));
+  };
   return (
     <div>
       <p htmlFor={filterId} className={css.filter}>
@@ -14,15 +20,10 @@ const Filter = ({ filtered }) => {
         className={css.input}
         type="search"
         id={filterId}
-        onChange={filtered}
+        onChange={handleFilter}
       ></input>
     </div>
   );
-};
-
-Filter.propTypes = {
-  filtered: PropTypes.func,
-  value: PropTypes.string,
 };
 
 export default Filter;

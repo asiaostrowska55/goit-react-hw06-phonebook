@@ -1,25 +1,26 @@
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import css from './ContactForm.module.css';
+import { getContacts } from 'redux/selectors';
+import { addContact } from '../../redux/contactSlicer';
 
-const ContactForm = ({ contacts, addContact }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
-  const handleChange = e => {
-    e.currentTarget.name === 'name'
-      ? setName(e.currentTarget.value)
-      : setNumber(e.currentTarget.value);
-  };
+  // const handleChange = e => {
+  //   e.currentTarget.name === 'name'
+  //     ? setName(e.currentTarget.value)
+  //     : setNumber(e.currentTarget.value);
+  // };
 
   const handleSubmit = e => {
     e.preventDefault();
 
+    const form = e.target;
     const contact = {
-      id: nanoid(),
-      name,
-      number,
+      name: form.name.value,
+      number: form.number.value,
     };
 
     let isContact;
@@ -32,13 +33,9 @@ const ContactForm = ({ contacts, addContact }) => {
 
     isContact
       ? alert(`${contact.name} is already in contacts!`)
-      : addContact(contact);
+      : dispatch(addContact(contact));
 
-    reset();
-  };
-  const reset = () => {
-    setName('');
-    setNumber('');
+    form.reset();
   };
 
   const numberId = nanoid();
@@ -51,10 +48,8 @@ const ContactForm = ({ contacts, addContact }) => {
           Name
         </label>
         <input
-          onChange={handleChange}
           className={css.input}
           id={nameId}
-          value={name}
           type="text"
           name="name"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -65,10 +60,8 @@ const ContactForm = ({ contacts, addContact }) => {
           Number
         </label>
         <input
-          onChange={handleChange}
           className={css.input}
           id={numberId}
-          value={number}
           type="tel"
           name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -81,13 +74,6 @@ const ContactForm = ({ contacts, addContact }) => {
       </form>
     </div>
   );
-};
-
-ContactForm.propTypes = {
-  number: PropTypes.string,
-  name: PropTypes.string,
-  handleChange: PropTypes.func,
-  addContact: PropTypes.func,
 };
 
 export default ContactForm;
