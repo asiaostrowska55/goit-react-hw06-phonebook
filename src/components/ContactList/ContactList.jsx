@@ -1,53 +1,46 @@
-import PropTypes from 'prop-types';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { getContacts, getFilter } from '../../redux/selectors.js';
 import css from './ContactList.module.css';
-import { useSelector, useDispatch } from 'react-redux';
-import { getContacts, getFilter } from '../../redux/selectors';
 import { deleteContact } from 'redux/contactSlicer';
 
-const ContactList = () => {
+const filteredContacts = (contacts, filter) => {
+  return contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
+};
+
+const ContactsList = () => {
   const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
+  const filterContact = filteredContacts(contacts, filter);
   const dispatch = useDispatch();
 
-  const filterContact = contacts.filter(contact => {
-    const name = contact.name.toLowerCase();
-    const phone = contact.phone;
-
-    const filterText = filter?.filter?.toLowerCase() ?? '';
-
-    return name.includes(filterText) || phone.includes(filterText);
-  });
-
-  if (filterContact.length === null) {
-    return <p>No contacts found</p>;
-  }
-
-  const handleDeleteContact = id => {
+  const handledDelete = id => {
     dispatch(deleteContact(id));
   };
 
-  const listItem =
-    filterContact === []
-      ? ''
-      : filterContact.map(item => {
-          return (
-            <li key={item.id} id={item.id} className={css.element}>
-              {item.name}: {item.number}
+  return (
+    <div className={css.contactsListBox}>
+      <ul className={css.contactsList}>
+        {filterContact &&
+          filterContact.map(contact => (
+            <div className={css.contactLi}>
+              <span className={css.contact}>{contact.name}:</span>
+              <span className={css.contact}>{contact.number}</span>
               <button
-                className={css.btn}
-                onClick={() => handleDeleteContact(item.id)}
                 type="button"
+                className={css.btnDelete}
+                onClick={handledDelete}
               >
                 Delete
               </button>
-            </li>
-          );
-        });
-  return <ul className={css.listItem}>{listItem}</ul>;
+            </div>
+          ))}
+      </ul>
+    </div>
+  );
 };
 
-ContactList.propTypes = {
-  listItem: PropTypes.array,
-  handleDeleteContact: PropTypes.func,
-};
-export default ContactList;
+export default ContactsList;
