@@ -1,34 +1,41 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { nanoid } from 'nanoid';
 
-const localStorageContacts = JSON.parse(localStorage.getItem('contact'));
+const STORAGE_KEY = 'newContacts';
+const contactsInitialState = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
-const contactSlice = createSlice({
+const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: localStorageContacts,
+  initialState: contactsInitialState,
   reducers: {
     addContact: {
       reducer(state, action) {
         state.push(action.payload);
+        setLocalStorage([...state]);
       },
-      prepare(contact) {
+      prepare(text) {
         return {
           payload: {
-            id: contact.id,
-            name: contact.name,
-            phone: contact.number,
+            id: nanoid(),
+            name: text.name,
+            number: text.number,
           },
         };
       },
     },
-    deleteContact(state, action) {
-      const index = state.findIndex(contact => contact.id === action.payload);
-      state.splice(index, 1);
-    },
-    loadContacts(state, action) {
-      state.splice(0, state.length, ...action.payload);
+    deleteContact: {
+      reducer(state, action) {
+        const index = state.findIndex(contact => contact.id === action.payload);
+        state.splice(index, 1);
+        setLocalStorage([...state]);
+      },
     },
   },
 });
 
-export const { addContact, deleteContact, loadContacts } = contactSlice.actions;
-export const contactReducer = contactSlice.reducer;
+export const { addContact, deleteContact } = contactsSlice.actions;
+export const contactsReducer = contactsSlice.reducer;
+
+const setLocalStorage = contacts => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
+};

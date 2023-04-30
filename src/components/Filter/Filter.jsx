@@ -1,26 +1,25 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { setFilter } from 'redux/filterSlicer';
 import { nanoid } from 'nanoid';
 import css from './Filter.module.css';
-import { setFilter } from '../../redux/filterSlicer';
-import { useDispatch } from 'react-redux';
 
 const Filter = () => {
-  const filterId = nanoid();
   const dispatch = useDispatch();
+  const filterId = nanoid();
 
-  const handleFilter = event => {
+  const handleChange = event => {
     dispatch(setFilter(event.currentTarget.value));
   };
+
   return (
-    <div>
-      <p htmlFor={filterId} className={css.filter}>
-        Find contacts by name
-      </p>
+    <div className={css.filter}>
+      <label htmlFor={filterId}>Find contacts by name</label>
       <input
-        className={css.input}
-        type="search"
+        className={css.inputFilter}
         id={filterId}
-        onChange={handleFilter}
+        type="search"
+        onChange={event => handleChange(event)}
       ></input>
     </div>
   );

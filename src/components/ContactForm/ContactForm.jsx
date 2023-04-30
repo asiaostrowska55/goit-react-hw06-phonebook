@@ -1,36 +1,27 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
-import css from './ContactForm.module.css';
 import { getContacts } from 'redux/selectors';
 import { addContact } from '../../redux/contactSlicer';
+import css from './ContactForm.module.css';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
 
-  // const handleChange = e => {
-  //   e.currentTarget.name === 'name'
-  //     ? setName(e.currentTarget.value)
-  //     : setNumber(e.currentTarget.value);
-  // };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    const form = e.target;
+  const handleSubmit = event => {
+    event.preventDefault();
+    const form = event.target;
     const contact = {
       name: form.name.value,
       number: form.number.value,
     };
 
     let isContact;
-    contacts.forEach(newContact => {
-      if (newContact.name.toLowerCase() === contact.name.toLowerCase()) {
+    contacts.forEach(person => {
+      if (contact.name.toLowerCase() === person.name.toLowerCase()) {
         isContact = true;
-        return;
       }
     });
-
     isContact
       ? alert(`${contact.name} is already in contacts!`)
       : dispatch(addContact(contact));
