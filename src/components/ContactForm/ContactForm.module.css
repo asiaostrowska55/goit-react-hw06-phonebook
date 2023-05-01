@@ -33,9 +33,10 @@
   background-color: white;
   cursor: pointer;
   height: 23px;
+  transition: all 0.3s ease-out;
 }
 .btn:hover,
 :focus {
   background-color: rgb(75, 120, 243);
-  transition-duration: 150ms;
+  color: white;
 }

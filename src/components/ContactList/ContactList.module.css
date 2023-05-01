@@ -1,19 +1,23 @@
 .element {
   font-size: 18px;
   font-weight: 600;
+  margin-bottom: 5px;
 }
-.btn {
-  width: 60px;
+
+.listItem {
+  margin-left: 50px;
+}
+
+.btnDelete {
   border: 1px solid rgb(189, 189, 189);
   border-radius: 3px;
-  box-shadow: 0px 0px 2px 0px rgba(190, 190, 190, 1);
   border: 1px solid rgb(187, 187, 187);
-  background-color: white;
+  background-color: rgba(205, 205, 240, 0.477);
   cursor: pointer;
   margin-left: 10px;
+  transition: all 0.5s ease-out;
 }
-.btn:hover,
+.btnDelete:hover,
 :focus {
-  background-color: rgb(75, 120, 243);
-  transition-duration: 150ms;
+  background-color: rgba(254, 254, 255, 0.906);
 }
