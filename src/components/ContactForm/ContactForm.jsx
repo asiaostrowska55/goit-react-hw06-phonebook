@@ -14,6 +14,7 @@ const ContactForm = () => {
     const contact = {
       name: form.name.value,
       number: form.number.value,
+      id: nanoid(),
     };
 
     let isContact;
